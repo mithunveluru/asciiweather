@@ -29,8 +29,9 @@ $ asciiweather Chennai
 ```
 
 Real observations from [Open-Meteo](https://open-meteo.com), turned into a
-procedurally generated ASCII scene. No API key, no account, no daemon, no
-telemetry. One binary, one HTTP request, one picture.
+procedurally generated ASCII scene — not a stock photo of a raincloud. No API
+key, no account, no daemon, no telemetry. One binary, one HTTP request, one
+picture. That's the whole pitch.
 
 ---
 
@@ -73,6 +74,13 @@ Clear, night                         Thunderstorm, day
 Run `cargo run --example gallery` to render every condition, day and night.
 </details>
 
+## Deliberately absent
+
+No web dashboard, no REST API, no cloud database, no user accounts, no
+Kubernetes, no message queue, no plugin framework, no background daemon. It's
+a CLI that fetches the weather and draws it. That job doesn't need a control
+plane.
+
 ## Install
 
 ```sh
@@ -88,7 +96,8 @@ cargo build --release
 install -m755 target/release/asciiweather ~/.local/bin/
 ```
 
-Requires a Rust toolchain (2024 edition). No system libraries, no root.
+Requires a Rust toolchain (2024 edition). No system libraries, no root, no
+`docker-compose.yml` summoning six containers to render a cloud.
 
 ## Usage
 
@@ -122,8 +131,8 @@ asciiweather Reykjavik
 asciiweather "São Paulo"
 ```
 
-There is **no IP-based geolocation**. asciiweather never guesses where you are;
-you tell it, once:
+There is **no IP-based geolocation**. asciiweather never guesses where you
+are — it's not that kind of app. You tell it, once:
 
 ```sh
 asciiweather config set location Chennai
@@ -173,7 +182,8 @@ interrupted run can never leave a corrupt entry.
 - Request fails and nothing is cached → a plain error and a non-zero exit.
 
 The cache key is the query you typed, so an offline run needs no geocoding
-either. `--no-cache` bypasses reads (fresh results are still written).
+either. `--no-cache` bypasses reads (fresh results are still written). Nothing
+here phones home; it just remembers what the sky looked like.
 
 ## JSON mode
 
@@ -229,8 +239,9 @@ asciiweather Chennai --animate      # any key, q, Esc or Ctrl+C to quit
 Each frame is the *same seeded scene* sampled at a later time: droplets keep
 falling, clouds drift, storms strobe, stars twinkle. It runs at roughly
 8 frames per second in an alternate screen buffer, and restores the terminal on
-exit — including on panic. Animation is skipped automatically when stdout is
-not a TTY, or with `--json`, `--plain` or `--compact`.
+exit — including on panic. Even if it crashes, your shell survives; priorities.
+Animation is skipped automatically when stdout is not a TTY, or with `--json`,
+`--plain` or `--compact`.
 
 ## Architecture
 
@@ -321,8 +332,9 @@ UPDATE_GOLDEN=1 cargo test
 - Two outbound requests, both to `open-meteo.com`: one geocode, one forecast.
   Cached runs make none.
 - Everything it stores lives in `~/.config/asciiweather/` and
-  `~/.cache/asciiweather/`, and is plain text you can read and delete.
+  `~/.cache/asciiweather/`, plain text you can read, edit, or delete without
+  asking anyone's permission.
 
 ## Licence
 
-MIT
+MIT. Do what you want with it; just don't blame the weather.
